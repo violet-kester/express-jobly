@@ -1,10 +1,19 @@
 const { BadRequestError } = require("../expressError");
 
 // TODO: THIS NEEDS SOME GREAT DOCUMENTATION.
+
 /** sqlForPartialUpdate(dataToUpdate, jsToSql)
  *
+ *  generates cols and vals for sql query from json data
+ *
  * - First arg: accepts object of JSON data to be updated
- * - Second arg: accepts JS object to be converted to SQL
+ * - Second arg: accepts JS object mapping JS properties to SQL cols
+ *
+ * - Returns:
+ *   {
+ *       setCols: '"first_name"=$1, "last_name"=$2',
+ *       values: ['firstName', 'lastName']
+ *   }
  */
 
 function sqlForPartialUpdate(dataToUpdate, jsToSql) {
@@ -24,3 +33,5 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 }
 
 module.exports = { sqlForPartialUpdate };
+
+

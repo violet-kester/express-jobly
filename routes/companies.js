@@ -28,7 +28,7 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
   const validator = jsonschema.validate(
     req.body,
     companyNewSchema,
-    {required: true}
+    { required: true }
   );
   if (!validator.valid) {
     const errs = validator.errors.map(e => e.stack);
@@ -51,8 +51,18 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
  */
 
 router.get("/", async function (req, res, next) {
-  const companies = await Company.findAll();
-  return res.json({ companies });
+
+  //
+  if (!req.query) {
+    const companies = await Company.findAll();
+    return res.json({ companies });
+  }
+
+  // pass query filter params into search
+  const filteredCompanies = await Company.search(req.query);
+
+  // return list of filtered companies
+  return res.json({ filteredCompanies });
 });
 
 /** GET /[handle]  =>  { company }
@@ -83,7 +93,7 @@ router.patch("/:handle", ensureLoggedIn, async function (req, res, next) {
   const validator = jsonschema.validate(
     req.body,
     companyUpdateSchema,
-    {required:true}
+    { required: true }
   );
   if (!validator.valid) {
     const errs = validator.errors.map(e => e.stack);
