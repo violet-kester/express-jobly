@@ -137,6 +137,25 @@ describe("GET /companies", function () {
     });
   });
 
+  test("filetered search works for anon", async function () {
+    const resp = await request(app)
+      .get("/companies?maxEmployees=1");
+
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.body).toEqual({
+      "companies":
+        [
+          {
+            "description": "Desc1",
+            "handle": "c1",
+            "logoUrl": "http://c1.img",
+            "name": "C1",
+            "numEmployees": 1
+          }
+        ]
+    });
+  });
+
 
   // test("throws error if min > max employees", async function () {
   //   const resp = await request(app)
