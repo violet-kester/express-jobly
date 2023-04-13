@@ -31,7 +31,6 @@ describe("POST /companies", function () {
     numEmployees: 10,
   };
 
-  // TODO:
   test("ok for admin", async function () {
     const resp = await request(app)
       .post("/companies")
@@ -114,7 +113,7 @@ describe("GET /companies", function () {
   });
 });
 
-// TODO:
+
 /**************************** GET /companies - filtered search */
 
 describe("GET /companies", function () {
@@ -138,7 +137,7 @@ describe("GET /companies", function () {
     });
   });
 
-  // TODO: 109 is not covered bc case if both provided not covered
+
   test("throws error if min > max employees", async function () {
     const resp = await request(app)
       .get("/companies?minEmployees=10&maxEmployees=3");

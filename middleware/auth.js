@@ -34,11 +34,10 @@ function authenticateJWT(req, res, next) {
  */
 
 function ensureLoggedIn(req, res, next) {
-    if (!res.locals.user) throw new UnauthorizedError();
-    return next();
+  if (!res.locals.user) throw new UnauthorizedError();
+  return next();
 }
 
-// TODO:
 /** Require admin user or raise 401 */
 
 function ensureAdmin(req, res, next) {
@@ -49,9 +48,34 @@ function ensureAdmin(req, res, next) {
   throw new UnauthorizedError();
 }
 
+/** Middleware: Requires user is user for route. */
+
+// function ensureCorrectUser(req, res, next) {
+//   const currentUser = res.locals.user;
+//   const hasUnauthorizedUsername = currentUser?.username !== req.locals.user.username;
+
+//   if (!currentUser || hasUnauthorizedUsername) {
+//     throw new UnauthorizedError();
+//   }
+
+//   return next();
+// }
+
+/** Middleware: Requires user is correct user or admin for route. */
+
+function ensureCorrectUserOrAdmin(req, res, next) {
+  const user = res.locals.user;
+  if (user.isAdmin === true || user.username === req.params.username) {
+    return next();
+  }
+
+  throw new UnauthorizedError();
+}
+
 
 module.exports = {
   authenticateJWT,
   ensureLoggedIn,
-  ensureAdmin
+  ensureAdmin,
+  ensureCorrectUserOrAdmin
 };

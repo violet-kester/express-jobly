@@ -5,7 +5,8 @@ const { UnauthorizedError } = require("../expressError");
 const {
   authenticateJWT,
   ensureLoggedIn,
-  ensureAdmin
+  ensureAdmin,
+  ensureCorrectUserOrAdmin,
 } = require("./auth");
 
 
@@ -62,7 +63,6 @@ describe("ensureLoggedIn", function () {
 });
 
 
-// TODO:
 describe("ensureAdmin", function () {
 
   test("works if not admin", function () {
@@ -76,8 +76,6 @@ describe("ensureAdmin", function () {
   test("works if admin", function () {
 
     const adminJwt = jwt.sign({ username: "test", isAdmin: true }, SECRET_KEY);
-
-    // { username: 'test', isAdmin: true, iat: 1681408849 }
     const user = jwt.verify(adminJwt, SECRET_KEY);
 
     const res = { locals: { user } };
@@ -85,7 +83,6 @@ describe("ensureAdmin", function () {
 
     ensureAdmin(req, res, next);
 
-    // res.locals { username: 'test', isAdmin: true, iat: 1681409060 }
     expect(res.locals).toEqual({
       user: {
         username: "test",
@@ -93,5 +90,26 @@ describe("ensureAdmin", function () {
         iat: expect.any(Number)
       }
     });
+  });
+});
+
+describe("ensureCorrectUserOrAdmin", function () {
+  test("works if correct user or admin", function () {
+    const req = { locals: { user: { username: "test" } } };
+    const res = { locals: { user: { username: "test" } } };
+    ensureCorrectUserOrAdmin(req, res, next);
+  });
+
+  test("throws error if incorrect user", function () {
+    const req = { locals: { user: { username: "badUserName" } } };
+    const res = { locals: { user: { username: "test" } } };
+
+    try {
+      ensureCorrectUserOrAdmin(req, res, next);
+    } catch(err) {
+      //NOTE: ask about this
+      expect(err instanceof UnauthorizedError).toBeTruthy();
+      //expect(() => ensureCorrectUser(req, res, next)).toThrowError();
+    }
   });
 });

@@ -11,6 +11,7 @@ const Company = require("../models/company");
 
 const companyNewSchema = require("../schemas/companyNew.json");
 const companyUpdateSchema = require("../schemas/companyUpdate.json");
+const companyFilterSchema = require("../schemas/companyFilter.json");
 
 const router = new express.Router();
 
@@ -33,6 +34,7 @@ router.post("/",
       companyNewSchema,
       { required: true }
     );
+
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
@@ -42,7 +44,7 @@ router.post("/",
     return res.status(201).json({ company });
   });
 
-// TODO:
+
 /** GET /  =>
  * { companies: [{ handle, name, description, numEmployees, logoUrl }, ...] }
  *
@@ -64,8 +66,24 @@ router.get("/", async function (req, res, next) {
     return res.json({ companies });
   }
 
-  // TODO: make a schema for route to validate data
-  // TODO: convert min and max to numbers here isntead of the model
+  const validator = jsonschema.validate(
+    req.query,
+    companyFilterSchema,
+    { required: true }
+  );
+
+  if (!validator.valid) {
+    const errs = validator.errors.map(e => e.stack);
+    throw new BadRequestError(errs);
+  }
+
+  if ("minEmployees" in req.query) {
+    req.query.minEmployees = Number(req.query.minEmployees);
+  }
+
+  if ("maxEmployees" in req.query) {
+    req.query.maxEmployees = Number(req.query.maxEmployees);
+  }
 
   const companies = await Company.search(req.query);
 

@@ -66,7 +66,6 @@ class Company {
     return companiesRes.rows;
   }
 
-  // TODO:
   /** Search companies with filter
    *
    * Can filter on provided search filters:
@@ -94,17 +93,13 @@ class Company {
         return `name ILIKE $${idx + 1}`;
       }
       if (key === "minEmployees") {
-        // TODO: numbers should be sent from route
-        searchTermObject[key] = Number(searchTermObject[key]);
         return `num_employees >= $${idx + 1}`;
       }
       if (key === "maxEmployees") {
-        searchTermObject[key] = Number(searchTermObject[key]);
         return `num_employees <= $${idx + 1}`;
       }
     });
 
-    // TODO: 109 is uncovered bc it will always succeed as is
     if ("minEmployees" in searchTermObject
       && "maxEmployees" in searchTermObject) {
       if (searchTermObject.minEmployees > searchTermObject.maxEmployees) {
@@ -118,8 +113,9 @@ class Company {
 
     const queryFilterString = queryFilterStrings.join(' AND ');
 
-    // TODO: find a better way to check
-    if (!queryFilterString) throw new BadRequestError("Invalid search request");
+    if (!queryFilterString) throw new BadRequestError(
+      "key can only be nameLike, minEmployees, or maxEmployees."
+    );
 
     const querySql =
       `SELECT handle,
@@ -132,8 +128,7 @@ class Company {
              ORDER BY name`;
 
 
-    // TODO: can just pass values
-    const result = await db.query(querySql, [...values]);
+    const result = await db.query(querySql, values);
 
     return result.rows;
   }
