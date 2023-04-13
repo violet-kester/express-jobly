@@ -5,6 +5,7 @@ const { UnauthorizedError } = require("../expressError");
 const {
   authenticateJWT,
   ensureLoggedIn,
+  ensureAdmin
 } = require("./auth");
 
 
@@ -57,5 +58,40 @@ describe("ensureLoggedIn", function () {
     const req = {};
     const res = { locals: {} };
     expect(() => ensureLoggedIn(req, res, next)).toThrowError();
+  });
+});
+
+
+// TODO:
+describe("ensureAdmin", function () {
+
+  test("works if not admin", function () {
+
+    const req = { headers: { authorization: `Bearer ${testJwt}` } };
+    const res = { locals: { user: { username: "test", isAdmin: false } } };
+
+    expect(() => ensureAdmin(req, res, next)).toThrowError();
+  });
+
+  test("works if admin", function () {
+
+    const adminJwt = jwt.sign({ username: "test", isAdmin: true }, SECRET_KEY);
+
+    // { username: 'test', isAdmin: true, iat: 1681408849 }
+    const user = jwt.verify(adminJwt, SECRET_KEY);
+
+    const res = { locals: { user } };
+    const req = { headers: { authorization: `Bearer ${adminJwt}` } };
+
+    ensureAdmin(req, res, next);
+
+    // res.locals { username: 'test', isAdmin: true, iat: 1681409060 }
+    expect(res.locals).toEqual({
+      user: {
+        username: "test",
+        isAdmin: true,
+        iat: expect.any(Number)
+      }
+    });
   });
 });

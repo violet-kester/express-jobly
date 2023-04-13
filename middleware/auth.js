@@ -38,8 +38,20 @@ function ensureLoggedIn(req, res, next) {
     return next();
 }
 
+// TODO:
+/** Require admin user or raise 401 */
+
+function ensureAdmin(req, res, next) {
+  const user = res.locals.user;
+  if (user && user.isAdmin === true) {
+    return next();
+  }
+  throw new UnauthorizedError();
+}
+
 
 module.exports = {
   authenticateJWT,
   ensureLoggedIn,
+  ensureAdmin
 };

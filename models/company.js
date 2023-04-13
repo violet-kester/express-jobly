@@ -66,29 +66,50 @@ class Company {
     return companiesRes.rows;
   }
 
-
-  /** Filter companies by query string
+  // TODO:
+  /** Search companies with filter
    *
-   * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
-  */
+   * Can filter on provided search filters:
+   * - minEmployees
+   * - maxEmployees
+   * - nameLike (will find case-insensitive, partial matches)
+   *
+   * Example expected data:
+   * { "nameLike": "hall", "minEmployees": "200" }
+   *
+   * Returns:
+   * [{ handle, name, description, numEmployees, logoUrl }, ...]
+   */
 
   static async search(searchTermObject) {
+
     // ["nameLike", "minEmployees", "maxEmployees"]
     const keys = Object.keys(searchTermObject);
+    console.log(searchTermObject, "!!!");
 
     // generate sql query string from searchTermObject
     const queryFilterStrings = keys.map((key, idx) => {
       if (key === "nameLike") {
-        searchTermObject[key] = `%${searchTermObject[key]}%`
+        searchTermObject[key] = `%${searchTermObject[key]}%`;
         return `name ILIKE $${idx + 1}`;
       }
       if (key === "minEmployees") {
+        searchTermObject[key] = Number(searchTermObject[key]);
         return `num_employees >= $${idx + 1}`;
       }
       if (key === "maxEmployees") {
+        searchTermObject[key] = Number(searchTermObject[key]);
         return `num_employees <= $${idx + 1}`;
       }
     });
+
+    // TODO: test this
+    if ("minEmployees" in searchTermObject
+      && "maxEmployees" in searchTermObject) {
+      if (searchTermObject.minEmployees > searchTermObject.maxEmployees) {
+        throw new BadRequestError("Min employees cannot be greater than max.");
+      }
+    }
 
     const values = keys.map((val) => {
       return searchTermObject[val];

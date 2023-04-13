@@ -6,13 +6,15 @@ const { BadRequestError } = require("../expressError");
  *
  * - First arg: accepts object of JSON data to be updated
  * - Second arg: accepts JS object mapping JS properties to SQL cols
- * 
- * TODO: show exactly what we pass in to get that return
  *
- * - Returns:
+ * Expected input data:
+ *  ({ "firstName": "newFirstName", "lastName": "newLastName" },
+ *   { "firstName": "first_name", "lastName": "last_name" })
+ *
+ * Returns:
  *   {
- *       setCols: '"first_name"=$1, "last_name"=$2',
- *       values: ['firstName', 'lastName']
+ *     setCols: '"first_name"=$1, "last_name"=$2',
+ *     values: ['firstName', 'lastName']
  *   }
  */
 

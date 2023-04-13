@@ -87,9 +87,11 @@ describe("findAll", function () {
   });
 });
 
+// TODO: add min < max check to models tests
 /************************************** search */
 
 describe("search", function () {
+
   test("works - search by name", async function () {
     let companies = await Company.search({ "nameLike": "2" });
     expect(companies).toEqual([
@@ -106,12 +108,9 @@ describe("search", function () {
   test("bad request with query strings", async function () {
     try {
       await Company.search({ bad: "2" });
-
     } catch (err) {
       expect(err instanceof BadRequestError).toBeTruthy();
-
     }
-
   });
 
   test("works - search by min num employees", async function () {
@@ -130,6 +129,14 @@ describe("search", function () {
       numEmployees: 3,
       logoUrl: "http://c3.img",
     }]);
+  });
+
+  test("throws error if min > max employees", async function () {
+    try {
+      let companies = await Company.search({ "minEmployees": 20, "maxEmployees": 2 });
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
   });
 
 });
