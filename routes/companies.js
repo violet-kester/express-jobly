@@ -64,6 +64,9 @@ router.get("/", async function (req, res, next) {
     return res.json({ companies });
   }
 
+  // TODO: make a schema for route to validate data
+  // TODO: convert min and max to numbers here isntead of the model
+
   const companies = await Company.search(req.query);
 
   return res.json({ companies });

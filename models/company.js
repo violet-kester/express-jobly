@@ -94,6 +94,7 @@ class Company {
         return `name ILIKE $${idx + 1}`;
       }
       if (key === "minEmployees") {
+        // TODO: numbers should be sent from route
         searchTermObject[key] = Number(searchTermObject[key]);
         return `num_employees >= $${idx + 1}`;
       }
@@ -103,7 +104,7 @@ class Company {
       }
     });
 
-    // TODO: test this
+    // TODO: 109 is uncovered bc it will always succeed as is
     if ("minEmployees" in searchTermObject
       && "maxEmployees" in searchTermObject) {
       if (searchTermObject.minEmployees > searchTermObject.maxEmployees) {
@@ -117,6 +118,7 @@ class Company {
 
     const queryFilterString = queryFilterStrings.join(' AND ');
 
+    // TODO: find a better way to check
     if (!queryFilterString) throw new BadRequestError("Invalid search request");
 
     const querySql =
@@ -130,6 +132,7 @@ class Company {
              ORDER BY name`;
 
 
+    // TODO: can just pass values
     const result = await db.query(querySql, [...values]);
 
     return result.rows;

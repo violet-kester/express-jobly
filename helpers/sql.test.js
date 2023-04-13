@@ -13,6 +13,7 @@ describe("sqlForPartialUpdate", function () {
         });
     });
 
+    // TODO: redundant
     test("Return an object with setCols and values as properties", function () {
         const dataToUpdate = { firstName: 'Aliya', lastName: 'last'};
         const jsToSql = {firstName: 'first_name', lastName: 'last_name'};
@@ -28,12 +29,14 @@ describe("sqlForPartialUpdate", function () {
 
         expect(() => sqlForPartialUpdate(dataToUpdate, jsToSql)).toThrow(BadRequestError);
     });
-    
+
     test("Should return camelCase properties if jsToSql is empty", function () {
         const dataToUpdate = {firstName: 'Aliya', lastName: 'last'};
         const jsToSql = {};
 
         const result = sqlForPartialUpdate(dataToUpdate, jsToSql);
+
+        // TODO: test for the whole object - see line 10
         expect(result.setCols).toEqual('"firstName"=$1, "lastName"=$2');
     });
 });

@@ -136,6 +136,7 @@ describe("GET /companies", function () {
     });
   });
 
+  // TODO: 109 is not covered bc case if both provided not covered
   test("throws error if min > max employees", async function () {
     const resp = await request(app)
       .get("/companies?minEmployees=10&maxEmployees=3");
