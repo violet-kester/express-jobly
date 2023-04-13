@@ -28,7 +28,6 @@ const router = express.Router();
  **/
 
 router.post("/",
-  ensureLoggedIn,
   ensureAdmin,
   async function (req, res, next) {
     const validator = jsonschema.validate(
@@ -55,7 +54,6 @@ router.post("/",
  **/
 
 router.get("/",
-  ensureLoggedIn,
   ensureAdmin,
   async function (req, res, next) {
     const users = await User.findAll();
@@ -71,7 +69,6 @@ router.get("/",
  **/
 
 router.get("/:username",
-  ensureLoggedIn,
   ensureCorrectUserOrAdmin,
   async function (req, res, next) {
     const user = await User.get(req.params.username);
@@ -90,7 +87,6 @@ router.get("/:username",
  **/
 
 router.patch("/:username",
-  ensureLoggedIn,
   ensureCorrectUserOrAdmin,
   async function (req, res, next) {
     const validator = jsonschema.validate(
@@ -114,7 +110,6 @@ router.patch("/:username",
  **/
 
 router.delete("/:username",
-  ensureLoggedIn,
   ensureCorrectUserOrAdmin,
   async function (req, res, next) {
     await User.remove(req.params.username);

@@ -76,7 +76,8 @@ router.get("/", async function (req, res, next) {
     const errs = validator.errors.map(e => e.stack);
     throw new BadRequestError(errs);
   }
-
+  
+  //NOTE: ask about json validator str -> num
   if ("minEmployees" in req.query) {
     req.query.minEmployees = Number(req.query.minEmployees);
   }
