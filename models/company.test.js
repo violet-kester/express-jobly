@@ -87,38 +87,51 @@ describe("findAll", function () {
   });
 });
 
-// TODO:
 /************************************** search */
 
 describe("search", function () {
   test("works - search by name", async function () {
     let companies = await Company.search({ "nameLike": "2" });
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+    ]);
+  });
+
+  test("bad request with query strings", async function () {
+    try {
+      await Company.search({ bad: "2" });
+
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+
+    }
+
+  });
+
+  test("works - search by min num employees", async function () {
+    let companies = await Company.search({ "minEmployees": "2" });
     expect(companies).toEqual([{
       handle: "c2",
       name: "C2",
       description: "Desc2",
       numEmployees: 2,
       logoUrl: "http://c2.img",
+    },
+    {
+      handle: "c3",
+      name: "C3",
+      description: "Desc3",
+      numEmployees: 3,
+      logoUrl: "http://c3.img",
     }]);
   });
-});
 
-test("works - search by min num employees", async function () {
-  let companies = await Company.search({ "minEmployees": 1 });
-  expect(companies).toEqual([{
-    handle: "c2",
-    name: "C2",
-    description: "Desc2",
-    numEmployees: 2,
-    logoUrl: "http://c2.img",
-  },
-  {
-    handle: "c3",
-    name: "C3",
-    description: "Desc3",
-    numEmployees: 3,
-    logoUrl: "http://c3.img",
-  }]);
 });
 
 /************************************** get */

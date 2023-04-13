@@ -66,38 +66,39 @@ class Company {
     return companiesRes.rows;
   }
 
-  // TODO:
-  /** Find companies by search string
+
+  /** Filter companies by query string
    *
-   * Returns [{ handle, name, description, numEmployees, logoUrl }]
+   * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
   */
 
   static async search(searchTermObject) {
-    console.log("searchTermObject=", searchTermObject);
-
     // ["nameLike", "minEmployees", "maxEmployees"]
     const keys = Object.keys(searchTermObject);
 
     // generate sql query string from searchTermObject
-
     const queryFilterStrings = keys.map((key, idx) => {
       if (key === "nameLike") {
-        return `name ILIKE '%${searchTermObject[key]}%'`;
+        searchTermObject[key] = `%${searchTermObject[key]}%`
+        return `name ILIKE $${idx + 1}`;
       }
       if (key === "minEmployees") {
-        return `num_employees >= ${searchTermObject[key]}`;
+        return `num_employees >= $${idx + 1}`;
       }
       if (key === "maxEmployees") {
-        return `num_employees <= ${searchTermObject[key]}`;
+        return `num_employees <= $${idx + 1}`;
       }
     });
-    console.log("queryFilterStrings=", queryFilterStrings);
+
+    const values = keys.map((val) => {
+      return searchTermObject[val];
+    });
 
     const queryFilterString = queryFilterStrings.join(' AND ');
-    console.log("queryFilterString=", queryFilterString);
 
-    // query database to get companies matching queryFilterString
-    const results = await db.query(
+    if (!queryFilterString) throw new BadRequestError("Invalid search request");
+
+    const querySql =
       `SELECT handle,
                     name,
                     description,
@@ -105,11 +106,12 @@ class Company {
                     logo_url AS "logoUrl"
              FROM companies
              WHERE ${queryFilterString}
-             ORDER BY name`
-    );
+             ORDER BY name`;
 
-    console.log("results.rows=", results.rows);
-    return results.rows;
+
+    const result = await db.query(querySql, [...values]);
+
+    return result.rows;
   }
 
 

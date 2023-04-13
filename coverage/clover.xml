@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1681324338385" clover="3.2.0">
+  <project timestamp="1681324338385" name="All files">
+    <metrics statements="109" coveredstatements="76" conditionals="12" coveredconditionals="4" methods="22" coveredmethods="11" elements="143" coveredelements="91" complexity="0" loc="109" ncloc="109" packages="1" files="4" classes="4"/>
+    <file name="_testCommon.js" path="/home/kevin/rithm/projects/express-jobly/routes/_testCommon.js">
+      <metrics statements="17" coveredstatements="17" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="4" count="1" type="stmt"/>
+      <line num="5" count="1" type="stmt"/>
+      <line num="6" count="1" type="stmt"/>
+      <line num="10" count="1" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="14" count="1" type="stmt"/>
+      <line num="22" count="1" type="stmt"/>
+      <line num="30" count="1" type="stmt"/>
+      <line num="39" count="1" type="stmt"/>
+      <line num="47" count="1" type="stmt"/>
+      <line num="55" count="1" type="stmt"/>
+      <line num="66" count="19" type="stmt"/>
+      <line num="70" count="19" type="stmt"/>
+      <line num="74" count="1" type="stmt"/>
+      <line num="78" count="1" type="stmt"/>
+      <line num="81" count="1" type="stmt"/>
+    </file>
+    <file name="auth.js" path="/home/kevin/rithm/projects/express-jobly/routes/auth.js">
+      <metrics statements="26" coveredstatements="11" conditionals="4" coveredconditionals="0" methods="4" coveredmethods="0"/>
+      <line num="5" count="1" type="stmt"/>
+      <line num="7" count="1" type="stmt"/>
+      <line num="8" count="1" type="stmt"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="10" count="1" type="stmt"/>
+      <line num="11" count="1" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="13" count="1" type="stmt"/>
+      <line num="22" count="1" type="stmt"/>
+      <line num="23" count="0" type="stmt"/>
+      <line num="28" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="29" count="0" type="stmt"/>
+      <line num="30" count="0" type="stmt"/>
+      <line num="33" count="0" type="stmt"/>
+      <line num="34" count="0" type="stmt"/>
+      <line num="35" count="0" type="stmt"/>
+      <line num="36" count="0" type="stmt"/>
+      <line num="49" count="1" type="stmt"/>
+      <line num="50" count="0" type="stmt"/>
+      <line num="55" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="56" count="0" type="stmt"/>
+      <line num="57" count="0" type="stmt"/>
+      <line num="60" count="0" type="stmt"/>
+      <line num="61" count="0" type="stmt"/>
+      <line num="62" count="0" type="stmt"/>
+      <line num="66" count="1" type="stmt"/>
+    </file>
+    <file name="companies.js" path="/home/kevin/rithm/projects/express-jobly/routes/companies.js">
+      <metrics statements="32" coveredstatements="14" conditionals="4" coveredconditionals="0" methods="7" coveredmethods="0"/>
+      <line num="5" count="1" type="stmt"/>
+      <line num="6" count="1" type="stmt"/>
+      <line num="8" count="1" type="stmt"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="10" count="1" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="13" count="1" type="stmt"/>
+      <line num="15" count="1" type="stmt"/>
+      <line num="27" count="1" type="stmt"/>
+      <line num="28" count="0" type="stmt"/>
+      <line num="33" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="34" count="0" type="stmt"/>
+      <line num="35" count="0" type="stmt"/>
+      <line num="38" count="0" type="stmt"/>
+      <line num="39" count="0" type="stmt"/>
+      <line num="53" count="1" type="stmt"/>
+      <line num="54" count="0" type="stmt"/>
+      <line num="55" count="0" type="stmt"/>
+      <line num="66" count="1" type="stmt"/>
+      <line num="67" count="0" type="stmt"/>
+      <line num="68" count="0" type="stmt"/>
+      <line num="82" count="1" type="stmt"/>
+      <line num="83" count="0" type="stmt"/>
+      <line num="88" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="89" count="0" type="stmt"/>
+      <line num="90" count="0" type="stmt"/>
+      <line num="93" count="0" type="stmt"/>
+      <line num="94" count="0" type="stmt"/>
+      <line num="102" count="1" type="stmt"/>
+      <line num="103" count="0" type="stmt"/>
+      <line num="104" count="0" type="stmt"/>
+      <line num="108" count="1" type="stmt"/>
+    </file>
+    <file name="users.js" path="/home/kevin/rithm/projects/express-jobly/routes/users.js">
+      <metrics statements="34" coveredstatements="34" conditionals="4" coveredconditionals="4" methods="7" coveredmethods="7"/>
+      <line num="5" count="1" type="stmt"/>
+      <line num="7" count="1" type="stmt"/>
+      <line num="8" count="1" type="stmt"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="10" count="1" type="stmt"/>
+      <line num="11" count="1" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="13" count="1" type="stmt"/>
+      <line num="15" count="1" type="stmt"/>
+      <line num="30" count="1" type="stmt"/>
+      <line num="31" count="4" type="stmt"/>
+      <line num="36" count="4" type="cond" truecount="2" falsecount="0"/>
+      <line num="37" count="5" type="stmt"/>
+      <line num="38" count="2" type="stmt"/>
+      <line num="41" count="2" type="stmt"/>
+      <line num="42" count="2" type="stmt"/>
+      <line num="43" count="2" type="stmt"/>
+      <line num="54" count="1" type="stmt"/>
+      <line num="55" count="2" type="stmt"/>
+      <line num="56" count="1" type="stmt"/>
+      <line num="67" count="1" type="stmt"/>
+      <line num="68" count="2" type="stmt"/>
+      <line num="69" count="1" type="stmt"/>
+      <line num="83" count="1" type="stmt"/>
+      <line num="84" count="4" type="stmt"/>
+      <line num="89" count="4" type="cond" truecount="2" falsecount="0"/>
+      <line num="90" count="1" type="stmt"/>
+      <line num="91" count="1" type="stmt"/>
+      <line num="94" count="3" type="stmt"/>
+      <line num="95" count="2" type="stmt"/>
+      <line num="104" count="1" type="stmt"/>
+      <line num="105" count="2" type="stmt"/>
+      <line num="106" count="1" type="stmt"/>
+      <line num="110" count="1" type="stmt"/>
+    </file>
+  </project>
+</coverage>

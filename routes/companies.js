@@ -39,7 +39,7 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
   return res.status(201).json({ company });
 });
 
-/** GET /  =>
+/** GET / if no filters are provided: =>
  *   { companies: [ { handle, name, description, numEmployees, logoUrl }, ...] }
  *
  * Can filter on provided search filters:
@@ -52,17 +52,14 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
 
 router.get("/", async function (req, res, next) {
 
-  //
-  if (!req.query) {
+  if (Object.keys(req.query).length === 0) {
     const companies = await Company.findAll();
     return res.json({ companies });
   }
 
-  // pass query filter params into search
-  const filteredCompanies = await Company.search(req.query);
+  const companies = await Company.search(req.query);
 
-  // return list of filtered companies
-  return res.json({ filteredCompanies });
+  return res.json({ companies });
 });
 
 /** GET /[handle]  =>  { company }

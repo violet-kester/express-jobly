@@ -94,6 +94,9 @@ describe("GET /companies", function () {
             },
           ],
     });
+
+    // test("ok for anon", async function () {
+    // });
   });
 
   test("fails: test next() handler", async function () {
