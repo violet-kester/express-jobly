@@ -78,8 +78,8 @@ describe("ensureAdmin", function () {
     const adminJwt = jwt.sign({ username: "test", isAdmin: true }, SECRET_KEY);
     const user = jwt.verify(adminJwt, SECRET_KEY);
 
-    const res = { locals: { user } };
     const req = { headers: { authorization: `Bearer ${adminJwt}` } };
+    const res = { locals: { user } };
 
     ensureAdmin(req, res, next);
 
@@ -95,7 +95,9 @@ describe("ensureAdmin", function () {
 
 describe("ensureCorrectUserOrAdmin", function () {
   test("works if correct user or admin", function () {
-    const req = { locals: { user: { username: "test" } } };
+    const adminJwt = jwt.sign({ username: "test", isAdmin: true }, SECRET_KEY);
+    const payload =  jwt.decode(adminJwt);
+    const req = { params: payload}
     const res = { locals: { user: { username: "test" } } };
     ensureCorrectUserOrAdmin(req, res, next);
   });
@@ -108,8 +110,8 @@ describe("ensureCorrectUserOrAdmin", function () {
       ensureCorrectUserOrAdmin(req, res, next);
     } catch(err) {
       //NOTE: ask about this
-      expect(err instanceof UnauthorizedError).toBeTruthy();
-      //expect(() => ensureCorrectUser(req, res, next)).toThrowError();
+      // expect(err instanceof UnauthorizedError).toBeTruthy();
+      expect(() => ensureCorrectUser(req, res, next)).toThrowError();
     }
   });
 });

@@ -87,7 +87,7 @@ describe("findAll", function () {
   });
 });
 
-// TODO: add min < max check to models tests
+
 /************************************** search */
 
 describe("search", function () {

@@ -26,7 +26,6 @@ const router = new express.Router();
  */
 
 router.post("/",
-  ensureLoggedIn,
   ensureAdmin,
   async function (req, res, next) {
     const validator = jsonschema.validate(
@@ -76,7 +75,7 @@ router.get("/", async function (req, res, next) {
     const errs = validator.errors.map(e => e.stack);
     throw new BadRequestError(errs);
   }
-  
+
   //NOTE: ask about json validator str -> num
   if ("minEmployees" in req.query) {
     req.query.minEmployees = Number(req.query.minEmployees);
@@ -116,7 +115,6 @@ router.get("/:handle", async function (req, res, next) {
  */
 
 router.patch("/:handle",
-  ensureLoggedIn,
   ensureAdmin,
   async function (req, res, next) {
     const validator = jsonschema.validate(
@@ -139,7 +137,6 @@ router.patch("/:handle",
  */
 
 router.delete("/:handle",
-  ensureLoggedIn,
   ensureAdmin,
   async function (req, res, next) {
     await Company.remove(req.params.handle);
