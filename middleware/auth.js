@@ -64,8 +64,10 @@ function ensureAdmin(req, res, next) {
 /** Middleware: Requires user is correct user or admin for route. */
 
 function ensureCorrectUserOrAdmin(req, res, next) {
+  if (!res.locals.user) throw new UnauthorizedError();
+
   const user = res.locals.user;
-  if (user.isAdmin === true || user.username === req.params.username) {
+  if ((user && user.isAdmin === true) || user.username === req.params.username) {
     return next();
   }
 
