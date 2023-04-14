@@ -18,6 +18,7 @@ afterAll(commonAfterAll);
 /************************************** create */
 
 describe("create", function () {
+
   const newCompany = {
     handle: "new",
     name: "New",
@@ -87,7 +88,6 @@ describe("findAll", function () {
   });
 });
 
-
 /************************************** search */
 
 describe("search", function () {
@@ -156,7 +156,6 @@ describe("search", function () {
       expect(err instanceof BadRequestError).toBeTruthy();
     }
   });
-
 });
 
 /************************************** get */
