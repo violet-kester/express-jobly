@@ -10,7 +10,7 @@ class Job {
 
   /** Create a job (from data), update db, return new job data.
    *
-   * Data should be { title, salary, equity, companyHandle }:
+   * Data should be { title, salary, equity, companyHandle }
    *
    * Returns { id, title, salary, equity, companyHandle }
    *
@@ -71,7 +71,7 @@ class Job {
   /** Search jobs with filter
    *
    * Can filter on provided search filters:
-   * - title
+   * - title - will find case-insensitive, partial matches)
    * - minSalary
    * - hasEquity - boolean:
    *     if true, show jobs with non-zero equity.
