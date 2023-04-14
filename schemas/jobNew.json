@@ -9,7 +9,7 @@
             "maxLength": 30
         },
         "salary": {
-            "type": "string"
+            "type": "integer"
         },
         "equity": {
             "type": "string"

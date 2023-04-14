@@ -19,9 +19,9 @@ class Job {
 
   static async create({ title, salary, equity, companyHandle }) {
     const results = await db.query(
-      `SELECT title
-           FROM jobs
-           WHERE company_handle = $1`,
+      `SELECT name
+           FROM companies
+           WHERE handle = $1`,
       [companyHandle]);
 
     const company = results.rows[0];
@@ -59,12 +59,13 @@ class Job {
   static async findAll() {
     const jobsRes = await db.query(
       `SELECT id,
-                title,
-                salary,
-                equity,
-                company_handle AS "companyHandle"
-           FROM jobs
-           ORDER BY title`);
+          title,
+          salary,
+          equity,
+          company_handle AS "companyHandle"
+        FROM jobs
+        ORDER BY title`);
+    console.log("jobs model!!,", jobsRes.rows)
     return jobsRes.rows;
   }
 
