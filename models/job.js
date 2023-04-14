@@ -26,7 +26,7 @@ class Job {
 
     const company = results.rows[0];
 
-    if(!company) throw new NotFoundError("No Company!");
+    if (!company) throw new NotFoundError("No Company!");
 
     const result = await db.query(
       `INSERT INTO jobs(
@@ -45,7 +45,7 @@ class Job {
       ],
     );
     const job = result.rows[0];
-    if(!job) throw new BadRequestError();
+    if (!job) throw new BadRequestError();
 
 
     return job;
@@ -68,15 +68,84 @@ class Job {
     return jobsRes.rows;
   }
 
-   /** Given a job id, return data about job.
+  /** Search jobs with filter
    *
-   * Returns { id, title, salary, equity, companyHandle }
-   *   
+   * Can filter on provided search filters:
+   * - title
+   * - minSalary
+   * - hasEquity - boolean:
+   *     if true, show jobs with non-zero equity.
+   *     if false or not included: list all jobs regardless of equity)
    *
-   * Throws NotFoundError if not found.
-   **/
+   * Example expected data:
+   * { "title": "title", "minSalary": 100000, "hasEquity": true }
+   *
+   * Returns:
+   * [{ id, title, salary, equity, companyHandle }, ...]
+   */
 
-   static async get(id) {
+  static async search(searchTermObject) {
+
+    // ["title", "minSalary", "hasEquity"]
+    const keys = Object.keys(searchTermObject);
+
+    // generate sql query string from searchTermObject
+    const queryFilterStrings = keys.map((key, idx) => {
+      if (key === "title") {
+        searchTermObject[key] = `%${searchTermObject[key]}%`;
+        return `title ILIKE $${idx + 1}`;
+      }
+      if (key === "minSalary") {
+        return `salary >= $${idx + 1}`;
+      }
+      if (key === "hasEquity") {
+
+        // NOTE: why can't we move `searchTermObject.hasEquity = 0`;
+        if (searchTermObject.hasEquity === false) {
+          searchTermObject.hasEquity = 0;
+          return `equity >= $${idx + 1}`;
+        } else {
+          searchTermObject.hasEquity = 0;
+          return `equity > $${idx + 1}`;
+        }
+      }
+    });
+
+    const values = keys.map((val) => {
+      return searchTermObject[val];
+    });
+
+    const queryFilterString = queryFilterStrings.join(' AND ');
+    console.log("query string", queryFilterString);
+
+    if (!queryFilterString) throw new BadRequestError(
+      "key can only be title, minSalary, or hasEquity."
+    );
+
+    const querySql =
+      `SELECT id,
+                    title,
+                    salary,
+                    equity,
+                    company_handle AS "companyHandle"
+             FROM jobs
+             WHERE ${queryFilterString}
+             ORDER BY title`;
+
+    const result = await db.query(querySql, values);
+
+    return result.rows;
+  }
+
+  /** Given a job id, return data about job.
+  *
+  * Returns { id, title, salary, equity, companyHandle }
+  *
+  *
+  * Throws NotFoundError if not found.
+  **/
+
+  static async get(id) {
     const results = await db.query(
       `SELECT id,
                 title,
@@ -94,19 +163,19 @@ class Job {
     return job;
   }
 
-   /** Update job data with `data`.
-   *
-   * This is a "partial update" --- it's fine if data doesn't contain all the
-   * fields; this only changes provided ones.
-   *
-   * Data can include: { title, salary, equity }
-   *
-   * Returns {id, title, salary, equity, companyHandle}
-   *
-   * Throws NotFoundError if not found.
-   */
+  /** Update job data with `data`.
+  *
+  * This is a "partial update" --- it's fine if data doesn't contain all the
+  * fields; this only changes provided ones.
+  *
+  * Data can include: { title, salary, equity }
+  *
+  * Returns {id, title, salary, equity, companyHandle}
+  *
+  * Throws NotFoundError if not found.
+  */
 
-   static async update(id, data) {
+  static async update(id, data) {
     const { setCols, values } = sqlForPartialUpdate(
       data,
       {
@@ -127,6 +196,24 @@ class Job {
     return job;
   }
 
+  /** Delete given company from database; returns undefined.
+ *
+ * Throws NotFoundError if company not found.
+ **/
+
+  static async remove(id) {
+    const result = await db.query(
+      `DELETE
+             FROM jobs
+             WHERE id = $1
+             RETURNING id`,
+      [id]);
+    const job = result.rows[0];
+
+    if (!job) throw new NotFoundError(`No job: ${id}`);
+  }
 }
+
+
 
 module.exports = Job;
