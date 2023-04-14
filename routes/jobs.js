@@ -9,9 +9,9 @@ const { BadRequestError } = require("../expressError");
 const { ensureAdmin } = require("../middleware/auth");
 const Job = require("../models/job");
 
-const jobNewSchema = require("../schemas/companyNew.json");
-const jobUpdateSchema = require("../schemas/companyUpdate.json");
-const jobFilterSchema = require("../schemas/companyFilter.json");
+const jobNewSchema = require("../schemas/jobNew.json");
+const jobUpdateSchema = require("../schemas/jobUpdate.json");
+const jobFilterSchema = require("../schemas/jobFilter.json");
 
 const router = new express.Router();
 
