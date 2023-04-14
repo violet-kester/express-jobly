@@ -69,7 +69,7 @@ function ensureCorrectUserOrAdmin(req, res, next) {
   const user = res.locals.user;
 
   // if (user && (user.isAdmin === true || user.username === req.params.username)) {
-  if (user && (user.isAdmin === true || user.username === req.params.username)) {
+  if (user && user.username && (user.isAdmin === true || user.username === req.params.username)) {
     return next();
   }
 

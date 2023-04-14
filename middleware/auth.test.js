@@ -73,6 +73,14 @@ describe("ensureAdmin", function () {
     expect(() => ensureAdmin(req, res, next)).toThrowError();
   });
 
+  test("should fail if isAdmin isn't boolean", function () {
+
+    const req = { headers: { authorization: `Bearer ${testJwt}` } };
+    const res = { locals: { user: { username: "test", isAdmin: "true" } } };
+
+    expect(() => ensureAdmin(req, res, next)).toThrowError();
+  });
+
   test("works if admin", function () {
 
     const adminJwt = jwt.sign({ username: "test", isAdmin: true }, SECRET_KEY);
@@ -93,11 +101,18 @@ describe("ensureAdmin", function () {
   });
 });
 
+// TODO: add a test to test for isAdmin boolean
 describe("ensureCorrectUserOrAdmin", function () {
   test("works if correct user or admin", function () {
+
+    // generating token for auth user
     const adminJwt = jwt.sign({ username: "test", isAdmin: true }, SECRET_KEY);
-    const payload =  jwt.decode(adminJwt);
-    const req = { params: payload}
+
+    // grabbing auth user from payload
+    const payload = jwt.decode(adminJwt);
+
+    // sending auth user payload as req param
+    const req = { params: payload };
     const res = { locals: { user: { username: "test" } } };
     ensureCorrectUserOrAdmin(req, res, next);
   });
@@ -108,7 +123,7 @@ describe("ensureCorrectUserOrAdmin", function () {
 
     try {
       ensureCorrectUserOrAdmin(req, res, next);
-    } catch(err) {
+    } catch (err) {
       //NOTE: ask about this
       // expect(err instanceof UnauthorizedError).toBeTruthy();
       expect(() => ensureCorrectUser(req, res, next)).toThrowError();

@@ -24,6 +24,7 @@ const router = express.Router();
  * This returns the newly created user and an authentication token for them:
  *  {user: { username, firstName, lastName, email, isAdmin }, token }
  *
+ * // TODO: update doc strings
  * Authorization required: login
  **/
 
@@ -49,7 +50,7 @@ router.post("/",
 /** GET / => { users: [ {username, firstName, lastName, email }, ... ] }
  *
  * Returns list of all users.
- *
+ * TODO:
  * Authorization required: login
  **/
 

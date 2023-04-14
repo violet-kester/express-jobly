@@ -22,6 +22,7 @@ const router = new express.Router();
  *
  * Returns { handle, name, description, numEmployees, logoUrl }
  *
+ * TODO: update doc string
  * Authorization required: login
  */
 
@@ -72,6 +73,7 @@ router.get("/", async function (req, res, next) {
   );
 
   if (!validator.valid) {
+    // TODO: we dont have a test sending invalid filter data
     const errs = validator.errors.map(e => e.stack);
     throw new BadRequestError(errs);
   }
@@ -111,7 +113,7 @@ router.get("/:handle", async function (req, res, next) {
  *
  * Returns { handle, name, description, numEmployees, logo_url }
  *
- * Authorization required: login
+ * Authorization required: admin
  */
 
 router.patch("/:handle",
@@ -132,7 +134,7 @@ router.patch("/:handle",
   });
 
 /** DELETE /[handle]  =>  { deleted: handle }
- *
+ * TODO:
  * Authorization: login
  */
 
