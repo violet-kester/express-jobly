@@ -17,15 +17,15 @@ const router = express.Router();
 
 /** POST / { user }  => { user, token }
  *
- * Adds a new user. This is not the registration endpoint --- instead, this is
- * only for admin users to add new users. The new user being added can be an
- * admin.
+ * Adds a new user. This is not the registration endpoint - this is
+ * only for admin users to add new users.
+ * The new user being added can be an admin.
  *
  * This returns the newly created user and an authentication token for them:
- *  {user: { username, firstName, lastName, email, isAdmin }, token }
+ * {user: { username, firstName, lastName, email, isAdmin }, token }
  *
- * // TODO: update doc strings
- * Authorization required: login
+ *
+ * Authorization required: admin
  **/
 
 router.post("/",
@@ -50,8 +50,8 @@ router.post("/",
 /** GET / => { users: [ {username, firstName, lastName, email }, ... ] }
  *
  * Returns list of all users.
- * TODO:
- * Authorization required: login
+ *
+ * Authorization required: admin
  **/
 
 router.get("/",

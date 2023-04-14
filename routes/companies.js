@@ -18,12 +18,11 @@ const router = new express.Router();
 
 /** POST / { company } =>  { company }
  *
- * company should be { handle, name, description, numEmployees, logoUrl }
+ * Company should be { handle, name, description, numEmployees, logoUrl }
  *
  * Returns { handle, name, description, numEmployees, logoUrl }
  *
- * TODO: update doc string
- * Authorization required: login
+ * Authorization required: admin
  */
 
 router.post("/",
@@ -61,32 +60,37 @@ router.post("/",
 
 router.get("/", async function (req, res, next) {
 
+  // if no req.query params passed in with request, get all companies
   if (Object.keys(req.query).length === 0) {
     const companies = await Company.findAll();
     return res.json({ companies });
   }
 
+  // validate req.query using companyFilterSchema
   const validator = jsonschema.validate(
     req.query,
     companyFilterSchema,
     { required: true }
   );
 
+  // if data invalid, throw BadRequestError
   if (!validator.valid) {
-    // TODO: we dont have a test sending invalid filter data
     const errs = validator.errors.map(e => e.stack);
+    // errs = array of validation errors returned by the jsonschema validator
+    // that indicate the specific errors that occurred
     throw new BadRequestError(errs);
   }
 
-  //NOTE: ask about json validator str -> num
+  // NOTE: ask about json validator str -> num
+  // if min/max employees params passed in, convert string num vals to num
   if ("minEmployees" in req.query) {
     req.query.minEmployees = Number(req.query.minEmployees);
   }
-
   if ("maxEmployees" in req.query) {
     req.query.maxEmployees = Number(req.query.maxEmployees);
   }
 
+  // pass in req.query params into search to get filtered companies
   const companies = await Company.search(req.query);
 
   return res.json({ companies });
@@ -134,8 +138,8 @@ router.patch("/:handle",
   });
 
 /** DELETE /[handle]  =>  { deleted: handle }
- * TODO:
- * Authorization: login
+ *
+ * Authorization: admin
  */
 
 router.delete("/:handle",

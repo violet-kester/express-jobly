@@ -101,7 +101,7 @@ describe("ensureAdmin", function () {
   });
 });
 
-// TODO: add a test to test for isAdmin boolean
+
 describe("ensureCorrectUserOrAdmin", function () {
   test("works if correct user or admin", function () {
 
@@ -115,6 +115,25 @@ describe("ensureCorrectUserOrAdmin", function () {
     const req = { params: payload };
     const res = { locals: { user: { username: "test" } } };
     ensureCorrectUserOrAdmin(req, res, next);
+  });
+
+  // TODO: add a test to test for isAdmin boolean
+  test("throws error if invalid data", function () {
+    // generate token for invalid admin user data
+    const invalidAdminJwt = jwt.sign({ username: "test", isAdmin: "true" }, SECRET_KEY);
+    // grab admin user from payload
+    const invalidAdminUser = jwt.decode(invalidAdminJwt);
+
+    // set req.params to invalid admin user
+    const req = { params: invalidAdminUser };
+    // set res.locals (logged-in user) to `test` user
+    const res = { locals: { user: { username: "test" } } };
+
+    try {
+      ensureCorrectUserOrAdmin(req, res, next);
+    } catch (err) {
+      expect(() => ensureCorrectUser(req, res, next)).toThrowError();
+    }
   });
 
   test("throws error if incorrect user", function () {

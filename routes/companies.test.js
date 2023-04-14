@@ -42,7 +42,20 @@ describe("POST /companies", function () {
     });
   });
 
-  // TODO: add a test that unauthorized users cannot access this route
+  // new test
+  test("unauth for non-admin user", async function () {
+    const resp = await request(app)
+      .post("/companies")
+      .send(newCompany)
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
+    expect(resp.body).toEqual({
+      "error": {
+        "message": "Unauthorized",
+        "status": 401
+      }
+    });
+  });
 
   test("bad request with missing data", async function () {
     const resp = await request(app)
@@ -101,6 +114,39 @@ describe("GET /companies", function () {
 
     // test("ok for anon", async function () {
     // });
+  });
+
+  // new test
+  test("throws error if invalid data", async function () {
+    const resp = await request(app)
+      .get("/companies?maxEmployees=abcdefg");
+
+    // companyFilterSchema jsonschema validator should throw:
+    // BadRequestError(arrayOfValidationErrors)
+
+    expect(resp.statusCode).toEqual(500);
+    expect(resp.body).toEqual({
+      "error": {
+        "message": 'invalid input syntax for type integer: \"abcdefg\"',
+        "status": 500
+      }
+    });
+  });
+
+  // new test
+  test("throws error if invalid search term", async function () {
+    const resp = await request(app)
+      .get("/companies?name=hall");
+
+    expect(resp.statusCode).toEqual(400);
+    expect(resp.body).toEqual({
+      "error": {
+        "message": [
+          'instance is not allowed to have the additional property \"name\"'
+        ],
+        "status": 400
+      }
+    });
   });
 
   test("fails: test next() handler", async function () {
@@ -234,7 +280,16 @@ describe("PATCH /companies/:handle", function () {
     expect(resp.statusCode).toEqual(401);
   });
 
-  // TODO: add test for unauth for non-admin
+  // new test
+  test("unauth for non-admin user", async function () {
+    const resp = await request(app)
+      .patch(`/companies/c1`)
+      .send({
+        name: "C1-new",
+      })
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
+  });
 
   test("not found on no such company", async function () {
     const resp = await request(app)
@@ -271,7 +326,6 @@ describe("PATCH /companies/:handle", function () {
 
 describe("DELETE /companies/:handle", function () {
 
-  // TODO:
   test("works for admins", async function () {
     const resp = await request(app)
       .delete(`/companies/c1`)
@@ -279,7 +333,13 @@ describe("DELETE /companies/:handle", function () {
     expect(resp.body).toEqual({ deleted: "c1" });
   });
 
-  // TODO: add test for doesnt work for non admins
+  // new test
+  test("unauth for non-admin user", async function () {
+    const resp = await request(app)
+      .delete(`/companies/c1`)
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
+  });
 
   test("unauth for anon", async function () {
     const resp = await request(app)
