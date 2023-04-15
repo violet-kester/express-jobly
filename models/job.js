@@ -65,7 +65,6 @@ class Job {
           company_handle AS "companyHandle"
         FROM jobs
         ORDER BY title`);
-    console.log("jobs model!!,", jobsRes.rows)
     return jobsRes.rows;
   }
 

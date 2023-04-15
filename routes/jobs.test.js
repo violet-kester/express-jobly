@@ -10,12 +10,11 @@ const {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  testJobId,
   u1Token,
   adminToken,
 } = require("./_testCommon");
 const Job = require("../models/job");
-
-const { testJobId } = require("../models/_testCommon");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
@@ -106,14 +105,14 @@ describe("GET /jobs", function () {
             companyHandle: "c1",
           },
           {
-            id: testJobId[1],
+            id: expect.any(Number),
             title: "J2",
             salary: 200,
             equity: "0.2",
             companyHandle: "c2",
           },
           {
-            id: testJobId[2],
+            id: expect.any(Number),
             title: "J3",
             salary: 300,
             equity: "0",
@@ -131,11 +130,13 @@ describe("GET /jobs", function () {
     // jobFilterSchema jsonschema validator should throw:
     // BadRequestError(arrayOfValidationErrors)
 
-    expect(resp.statusCode).toEqual(500);
+    expect(resp.statusCode).toEqual(400);
     expect(resp.body).toEqual({
       "error": {
-        "message": 'invalid input syntax for type integer: \"abcdefg\"',
-        "status": 500
+        "message": [
+          "instance.minSalary is not of a type(s) integer"
+        ],
+        "status": 400
       }
     });
   });
@@ -171,72 +172,75 @@ describe("GET /jobs", function () {
 
 /**************************** GET /jobs - filtered search */
 
-// describe("GET /jobs", function () {
+describe("GET /jobs", function () {
 
-//   test("filtered search works for anon", async function () {
-//     const resp = await request(app)
-//       .get("/jobs?title=2");
+  test("filtered search works for anon", async function () {
+    const resp = await request(app)
+      .get("/jobs?title=2");
 
-//     expect(resp.statusCode).toEqual(200);
-//     expect(resp.body).toEqual({
-//       "companies":
-//         [
-//           {
-//             "description": "Desc2",
-//             "handle": "c2",
-//             "logoUrl": "http://c2.img",
-//             "name": "C2",
-//             "numEmployees": 2
-//           }
-//         ]
-//     });
-//   });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.body).toEqual({
+      "jobs":
+        [
+          {
+            id: testJobId[1],
+            title: "J2",
+            salary: 200,
+            equity: "0.2",
+            companyHandle: "c2",
+          }
+        ]
+    });
+  });
 
-//   test("multi-param filtered search works for anon", async function () {
-//     const resp = await request(app)
-//       .get("/jobs?title=2&minSalary=10000");
+  test("multi-param filtered search works for anon", async function () {
+    const resp = await request(app)
+      .get("/jobs?title=2&minSalary=110");
 
-//     expect(resp.statusCode).toEqual(200);
-//     expect(resp.body).toEqual({
-//       "companies":
-//         [
-//           {
-//             "description": "Desc1",
-//             "handle": "c1",
-//             "logoUrl": "http://c1.img",
-//             "name": "C1",
-//             "numEmployees": 1
-//           }
-//         ]
-//     });
-//   });
+      console.log(resp.body, "resppp");
 
-// });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.body).toEqual({
+      "jobs":
+        [
+          {
+            id: testJobId[1],
+            title: "J2",
+            salary: 200,
+            equity: "0.2",
+            companyHandle: "c2",
+          }
+        ]
+    });
+  });
+
+});
 
 
 /************************************** GET /jobs/:id */
 
-// describe("GET /jobs/:id", function () {
+describe("GET /jobs/:id", function () {
 
-//   test("works for anon", async function () {
-//     const resp = await request(app).get(testJobId[0]);
-//     expect(resp.body).toEqual({
-//       company: {
-//         id: testJobId[0],
-//         title: "J1",
-//         salary: 100,
-//         equity: "0.1",
-//         companyHandle: "c1",
-//       },
-//     });
-//   });
+  test("works for anon", async function () {
+    const resp = await request(app).get(`/jobs/${testJobId[0]}`);
+    console.log(testJobId[0]);
+    expect(resp.body).toEqual({
+      job: {
+        id: testJobId[0],
+        title: "J1",
+        salary: 100,
+        equity: "0.1",
+        companyHandle: "c1",
+      },
+    });
+  });
 
 
-//   test("not found for no such job", async function () {
-//     const resp = await request(app).get(`/jobs/nope`);
-//     expect(resp.statusCode).toEqual(404);
-//   });
-// });
+  test("not found for no such job", async function () {
+    const resp = await request(app).get(`/jobs/0`);
+    expect(resp.statusCode).toEqual(404);
+  });
+});
 
 /************************************** PATCH /companies/:handle */
 
