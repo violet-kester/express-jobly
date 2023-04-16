@@ -64,17 +64,22 @@ router.post("/",
 
 router.get("/", async function (req, res, next) {
 
+  const q = req.query;
   // if no req.query params passed in with request, get all jobs
   if (Object.keys(req.query).length === 0) {
     const jobs = await Job.findAll();
     return res.json({ jobs });
   }
 
+
   if ("minSalary" in req.query) {
+
     const minSalary = parseInt(req.query.minSalary);
-    req.query.minSalary = parseInt(req.query.minSalary);
+    // req.query.minSalary = parseInt(req.query.minSalary);
+    console.log("MINSALARTTT", (typeof minSalary));
+    req.query.minSalary = minSalary;
   }
-  console.log("req.query.minSalary", (typeof req.query.minSalary));
+  console.log("req.query.minSalary!!!", (typeof req.query.minSalary));
 
   // validate req.query using job FilterSchema
   const validator = jsonschema.validate(
