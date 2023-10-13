@@ -22,7 +22,7 @@ class Company {
    *
    * Throws BadRequestError if company already in database.
    *
-   **/
+   */
   static async create({ handle, name, description, numEmployees, logoUrl }) {
     const duplicateCheck = await db.query(
       `SELECT handle
@@ -62,7 +62,8 @@ class Company {
    *
    * Returns:
    * [{ handle, name, description, numEmployees, logoUrl }, ...]
-   * */
+   *
+   */
 
   static async findAll() {
     const companiesRes = await db.query(
@@ -78,6 +79,8 @@ class Company {
 
   /** search(searchTermObject) --------------------------------------------
    *
+   * Search companies by name.
+   *
    * Can search on provided (optional) filters:
    * - minEmployees
    * - maxEmployees
@@ -88,6 +91,7 @@ class Company {
    *
    * Returns:
    * [{ handle, name, description, numEmployees, logoUrl }, ...]
+   *
    */
   static async search(searchTermObject) {
 

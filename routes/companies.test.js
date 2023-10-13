@@ -115,13 +115,9 @@ describe("GET /companies", function () {
     });
   });
 
-  // new test
   test("throws error if invalid data", async function () {
     const resp = await request(app)
       .get("/companies?maxEmployees=abcdefg");
-
-    // companyFilterSchema jsonschema validator should throw:
-    // BadRequestError(arrayOfValidationErrors)
 
     expect(resp.statusCode).toEqual(500);
     expect(resp.body).toEqual({
@@ -132,7 +128,6 @@ describe("GET /companies", function () {
     });
   });
 
-  // new test
   test("throws error if invalid search term", async function () {
     const resp = await request(app)
       .get("/companies?name=hall");
@@ -202,22 +197,21 @@ describe("GET /companies", function () {
     });
   });
 
-  // // new test
-  // test("throws error if invalid data", async function () {
-  //   const resp = await request(app)
-  //     .get("/companies?maxEmployees=abcdefg");
+  test("throws error if invalid data", async function () {
+    const resp = await request(app)
+      .get("/companies?maxEmployees=abcdefg");
 
-  //   // companyFilterSchema jsonschema validator should throw:
-  //   // BadRequestError(arrayOfValidationErrors)
+    // companyFilterSchema jsonschema validator should throw:
+    // BadRequestError(arrayOfValidationErrors)
 
-  //   expect(resp.statusCode).toEqual(500);
-  //   expect(resp.body).toEqual({
-  //     "error": {
-  //       "message": 'invalid input syntax for type integer: \"abcdefg\"',
-  //       "status": 500
-  //     }
-  //   });
-  // });
+    expect(resp.statusCode).toEqual(500);
+    expect(resp.body).toEqual({
+      "error": {
+        "message": 'invalid input syntax for type integer: \"abcdefg\"',
+        "status": 500
+      }
+    });
+  });
 
   // // new test
   // test("throws error if invalid search term", async function () {
