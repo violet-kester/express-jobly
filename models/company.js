@@ -7,15 +7,22 @@ const { sqlForPartialUpdate } = require("../helpers/sql");
 /** Related functions for companies. */
 
 class Company {
-  /** Create a company (from data), update db, return new company data.
+
+  /** create({handle, name, description, numEmployees, logoUrl)} ----------
    *
-   * data should be { handle, name, description, numEmployees, logoUrl }
+   * - Creates a company from data.
+   * - Updates database.
+   * - Returns new company data.
    *
-   * Returns { handle, name, description, numEmployees, logoUrl }
+   * Data should be:
+   * { handle, name, description, numEmployees, logoUrl }
+   *
+   * Returns:
+   * { handle, name, description, numEmployees, logoUrl }
    *
    * Throws BadRequestError if company already in database.
-   * */
-
+   *
+   **/
   static async create({ handle, name, description, numEmployees, logoUrl }) {
     const duplicateCheck = await db.query(
       `SELECT handle
@@ -49,9 +56,12 @@ class Company {
     return company;
   }
 
-  /** Find all companies.
+  /** findAll()------------------------------------------------------------
    *
-   * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
+   * Find all companies.
+   *
+   * Returns:
+   * [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
 
   static async findAll() {
@@ -66,9 +76,9 @@ class Company {
     return companiesRes.rows;
   }
 
-  /** Search companies with filter
+  /** search(searchTermObject) --------------------------------------------
    *
-   * Can filter on provided search filters:
+   * Can search on provided (optional) filters:
    * - minEmployees
    * - maxEmployees
    * - nameLike (will find case-insensitive, partial matches)
@@ -79,14 +89,13 @@ class Company {
    * Returns:
    * [{ handle, name, description, numEmployees, logoUrl }, ...]
    */
-
   static async search(searchTermObject) {
 
+    // extract keys from search term object
     // ["nameLike", "minEmployees", "maxEmployees"]
     const keys = Object.keys(searchTermObject);
-    console.log(searchTermObject, "!!!");
 
-    // generate sql query string from searchTermObject
+    // map each key to a parameterized WHERE clause
     const queryFilterStrings = keys.map((key, idx) => {
       if (key === "nameLike") {
         searchTermObject[key] = `%${searchTermObject[key]}%`;
@@ -100,6 +109,7 @@ class Company {
       }
     });
 
+    // throw bad request error if min > max exmployees in search term object
     if ("minEmployees" in searchTermObject
       && "maxEmployees" in searchTermObject) {
       if (searchTermObject.minEmployees > searchTermObject.maxEmployees) {
@@ -107,16 +117,20 @@ class Company {
       }
     }
 
+    // extract search values from search term object
     const values = keys.map((val) => {
       return searchTermObject[val];
     });
 
+    // join array of WHERE clauses
     const queryFilterString = queryFilterStrings.join(' AND ');
 
+    // throw bad request error if invalid search key provided
     if (!queryFilterString) throw new BadRequestError(
-      "key can only be nameLike, minEmployees, or maxEmployees."
+      "Search keys can only be nameLike, minEmployees, or maxEmployees."
     );
 
+    // form WHERE clauses into final query string
     const querySql =
       `SELECT handle,
                     name,
@@ -127,7 +141,7 @@ class Company {
              WHERE ${queryFilterString}
              ORDER BY name`;
 
-
+    // query db using generated query string
     const result = await db.query(querySql, values);
 
     return result.rows;
